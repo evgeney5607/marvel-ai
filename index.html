@@ -2,374 +2,172 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#e21b23">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MARVEL AI</title>
 
 <style>
-*{box-sizing:border-box}
-
-body{
-  margin:0;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  background:white;
-  color:#333;
+* {
+  box-sizing: border-box;
 }
 
-.app{
-  min-height:100vh;
-  background:linear-gradient(#fff 0%,#fff 65%,#ffdede 100%);
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #fff;
+  color: #111;
 }
 
-.top{
-  height:80px;
-  padding:38px 22px 10px;
-  display:flex;
-  justify-content:space-between;
+header {
+  background: #e10600;
+  color: white;
+  padding: 22px;
+  text-align: center;
+  font-size: 28px;
+  font-weight: bold;
 }
 
-button{
-  border:0;
-  background:none;
-  cursor:pointer;
+main {
+  padding: 20px;
+  max-width: 700px;
+  margin: auto;
 }
 
-.icon{
-  font-size:28px;
-  color:#e21b23;
+h1 {
+  font-size: 25px;
 }
 
-.logo{
-  margin:45px auto 0;
-  width:max-content;
-  background:#e21b23;
-  color:white;
-  border:4px solid #e21b23;
-  padding:5px 12px;
-  font-size:34px;
-  font-weight:900;
-  letter-spacing:-2px;
+.subtitle {
+  color: #555;
 }
 
-.hero{
-  text-align:center;
-  padding:32px 20px 15px;
+.buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 20px 0;
 }
 
-.hero h1{
-  color:#e21b23;
-  font-size:36px;
-  margin:0 0 10px;
+button {
+  border: none;
+  border-radius: 12px;
+  padding: 15px;
+  font-size: 16px;
+  background: #f1f1f1;
 }
 
-.hero p{
-  font-size:18px;
-  line-height:1.45;
-  margin:0;
+button:active {
+  transform: scale(.98);
 }
 
-.grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-  padding:20px;
+#result {
+  white-space: pre-wrap;
+  background: #f5f5f5;
+  border-radius: 14px;
+  padding: 16px;
+  min-height: 100px;
+  margin-top: 15px;
 }
 
-.card{
-  height:94px;
-  border:1px solid #f2bfc1;
-  border-radius:18px;
-  background:white;
-  text-align:left;
-  padding:13px;
-  font-size:15px;
-  box-shadow:0 3px 10px #00000008;
+.input {
+  display: flex;
+  gap: 8px;
+  margin-top: 15px;
 }
 
-.card span{
-  font-size:28px;
-  color:#e21b23;
-  display:block;
-  margin-bottom:5px;
+input {
+  flex: 1;
+  padding: 15px;
+  border: 2px solid #ddd;
+  border-radius: 12px;
+  font-size: 16px;
 }
 
-.art{
-  min-height:390px;
-  background:linear-gradient(145deg,#fff0f0,#e21b23 65%,#a40000);
-  position:relative;
-  overflow:hidden;
-  padding-bottom:100px;
-}
-
-.art:before{
-  content:"";
-  position:absolute;
-  inset:-100px;
-  background:repeating-linear-gradient(
-    135deg,
-    transparent 0 35px,
-    #ffffff35 36px 40px
-  );
-}
-
-.bigA{
-  position:absolute;
-  left:50%;
-  top:38%;
-  transform:translate(-50%,-50%);
-  font-size:210px;
-  font-weight:900;
-  color:white;
-  text-shadow:0 0 20px #ff7777;
-}
-
-.chat{
-  position:absolute;
-  bottom:25px;
-  left:20px;
-  right:20px;
-  min-height:60px;
-  background:white;
-  border-radius:32px;
-  display:flex;
-  align-items:center;
-  padding-left:20px;
-  box-shadow:0 5px 20px #60000055;
-  z-index:2;
-}
-
-.chat input{
-  border:0;
-  outline:0;
-  flex:1;
-  font-size:16px;
-  min-width:0;
-}
-
-.send{
-  width:48px;
-  height:48px;
-  background:#e21b23;
-  color:white;
-  border-radius:50%;
-  font-size:22px;
-  margin-right:6px;
-}
-
-.result{
-  display:none;
-  position:relative;
-  z-index:3;
-  margin:20px;
-  padding:18px;
-  background:white;
-  border-radius:18px;
-  color:#222;
-  white-space:pre-wrap;
-  overflow:auto;
-  max-height:300px;
-}
-
-@media(max-width:430px){
-  .app{width:100%}
+.send {
+  background: #e10600;
+  color: white;
+  font-weight: bold;
 }
 </style>
 </head>
 
 <body>
 
-<div class="app">
+<header>MARVEL AI</header>
 
-  <div class="top">
-    <button class="icon">☰</button>
-    <button class="icon">⚙︎</button>
+<main>
+  <h1>Привет! Я — MARVEL AI.</h1>
+  <p class="subtitle">Твой личный ИИ-помощник. Что хочешь сделать сегодня?</p>
+
+  <div class="buttons">
+    <button onclick="quick('Помоги мне с учёбой')">📚 Учёба</button>
+    <button onclick="quick('Придумай идею')">💡 Идеи</button>
+    <button onclick="quick('Создай сайт')">💻 Создать сайт</button>
+    <button onclick="quick('Напиши код')">🧑‍💻 Код</button>
   </div>
 
-  <div class="logo">MARVEL AI</div>
+  <div id="result">MARVEL AI готов к работе.</div>
 
-  <div class="hero">
-    <h1>Привет!</h1>
-    <p>
-      Я — MARVEL AI.<br>
-      Твой личный ИИ-помощник.<br>
-      Что хочешь сделать сегодня?
-    </p>
+  <div class="input">
+    <input id="message" placeholder="Напиши сообщение...">
+    <button class="send" onclick="send()">➤</button>
   </div>
-
-  <div class="grid">
-
-    <button class="card" onclick="quick('Ответь на мой вопрос')">
-      <span>💬</span>
-      Ответить<br>на вопросы
-    </button>
-
-    <button class="card" onclick="quick('Помоги мне с учёбой')">
-      <span>🎓</span>
-      Помочь<br>с учёбой
-    </button>
-
-    <button class="card" onclick="quick('Создай код сайта')">
-      <span>&lt;/&gt;</span>
-      Написать<br>и объяснить код
-    </button>
-
-    <button class="card" onclick="quick('Придумай мне идею')">
-      <span>💡</span>
-      Придумать<br>идеи
-    </button>
-
-    <button class="card" onclick="quick('Создай изображение')">
-      <span>▧</span>
-      Создать<br>изображения
-    </button>
-
-    <button class="card" onclick="quick('Давай поговорим')">
-      <span>🎙</span>
-      Голосовое<br>общение
-    </button>
-
-  </div>
-
-  <div class="art">
-
-    <div class="bigA">A</div>
-
-    <div id="result" class="result"></div>
-
-    <div class="chat">
-      <input
-        id="message"
-        placeholder="Напиши сообщение..."
-        onkeydown="if(event.key==='Enter') send()"
-      >
-
-      <button class="send" onclick="send()">➤</button>
-    </div>
-
-  </div>
-
-</div>
+</main>
 
 <script>
-
-function quick(text){
-  document.getElementById("message").value=text;
-  document.getElementById("message").focus();
+function quick(text) {
+  document.getElementById("message").value = text;
+  send();
 }
 
-function send(){
+function send() {
+  const input = document.getElementById("message");
+  const result = document.getElementById("result");
+  const text = input.value.trim().toLowerCase();
 
-  const input=document.getElementById("message");
-  const result=document.getElementById("result");
+  if (!text) return;
 
-  const text=input.value.trim();
-
-  if(!text){
-    return;
+  if (text.includes("сайт") || text.includes("код")) {
+    result.textContent =
+      "💻 MARVEL AI\n\nВот пример сайта:\n\n" +
+      "<!DOCTYPE html>\\n" +
+      "<html>\\n" +
+      "<head><title>Мой сайт</title></head>\\n" +
+      "<body>\\n" +
+      "<h1>Привет!</h1>\\n" +
+      "<p>Это мой первый сайт.</p>\\n" +
+      "</body>\\n" +
+      "</html>";
   }
 
-  let answer="";
-
-  const lower=text.toLowerCase();
-
-  if(
-    lower.includes("создай код") ||
-    lower.includes("создай сайт") ||
-    lower.includes("сайт")
-  ){
-
-    answer=
-`MARVEL AI — генератор сайта
-
-Вот пример готового сайта:
-
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-<meta charset="UTF-8">
-<title>Мой сайт</title>
-<style>
-body{
-  font-family:Arial;
-  text-align:center;
-  padding:50px;
-}
-h1{
-  color:#e21b23;
-}
-button{
-  padding:12px 20px;
-  border:0;
-  border-radius:10px;
-  background:#e21b23;
-  color:white;
-}
-</style>
-</head>
-<body>
-
-<h1>Мой новый сайт</h1>
-<p>Сайт создан с помощью MARVEL AI 🚀</p>
-<button onclick="alert('Привет!')">
-Нажми меня
-</button>
-
-</body>
-</html>`;
-
-  }else if(
-    lower.includes("учёб") ||
-    lower.includes("учеб") ||
-    lower.includes("математ")
-  ){
-
-    answer=
-`🎓 MARVEL AI
-
-Я помогу разобраться с заданием.
-
-Напиши само задание, и мы разберём его по шагам.`;
-
-  }else if(
-    lower.includes("иде") ||
-    lower.includes("придум")
-  ){
-
-    answer=
-`💡 Вот идея:
-
-Создай персональный сайт-портфолио,
-где будут твои проекты, навыки и
-кнопка связи.
-
-MARVEL AI может помочь написать
-для него HTML, CSS и JavaScript.`;
-
-  }else{
-
-    answer=
-`🤖 MARVEL AI получил:
-
-"${text}"
-
-Сейчас это бесплатная демо-версия.
-Настоящую нейросеть подключим отдельным
-безопасным сервером, чтобы не раскрывать
-API-ключ прямо в приложении.`;
-
+  else if (
+    text.includes("учёб") ||
+    text.includes("учеб") ||
+    text.includes("математ")
+  ) {
+    result.textContent =
+      "📚 MARVEL AI\n\n" +
+      "Я могу помочь разобраться с заданием по шагам. " +
+      "Напиши само задание.";
   }
 
-  result.textContent=answer;
-  result.style.display="block";
+  else if (
+    text.includes("иде")
+  ) {
+    result.textContent =
+      "💡 Идея:\n\n" +
+      "Сделай MARVEL AI приложением, которое умеет создавать сайты " +
+      "по обычному описанию пользователя.";
+  }
 
-  input.value="";
+  else {
+    result.textContent =
+      "🤖 MARVEL AI\n\n" +
+      "Сейчас это бесплатная версия без подключения внешней нейросети.\n\n" +
+      "Но интерфейс уже готов, и следующим этапом можно подключить настоящую модель.";
+  }
 
-  result.scrollIntoView({
-    behavior:"smooth",
-    block:"center"
-  });
+  input.value = "";
 }
-
 </script>
 
 </body>
