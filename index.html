@@ -3,23 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MARVEL AI</title>
+<title>MARVEL AI — Local AI</title>
 
 <style>
-* {
-  box-sizing: border-box;
-}
-
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: #fff;
-  color: #111;
+  background: #111;
+  color: white;
 }
 
 header {
   background: #e10600;
-  color: white;
   padding: 22px;
   text-align: center;
   font-size: 28px;
@@ -27,45 +22,24 @@ header {
 }
 
 main {
-  padding: 20px;
   max-width: 700px;
   margin: auto;
+  padding: 20px;
 }
 
-h1 {
-  font-size: 25px;
-}
-
-.subtitle {
-  color: #555;
-}
-
-.buttons {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin: 20px 0;
-}
-
-button {
-  border: none;
-  border-radius: 12px;
+#status {
+  background: #222;
   padding: 15px;
-  font-size: 16px;
-  background: #f1f1f1;
+  border-radius: 12px;
+  margin-bottom: 15px;
 }
 
-button:active {
-  transform: scale(.98);
-}
-
-#result {
+#chat {
+  background: #1d1d1d;
+  padding: 15px;
+  border-radius: 12px;
+  min-height: 180px;
   white-space: pre-wrap;
-  background: #f5f5f5;
-  border-radius: 14px;
-  padding: 16px;
-  min-height: 100px;
-  margin-top: 15px;
 }
 
 .input {
@@ -76,15 +50,18 @@ button:active {
 
 input {
   flex: 1;
-  padding: 15px;
-  border: 2px solid #ddd;
-  border-radius: 12px;
+  padding: 14px;
+  border-radius: 10px;
+  border: none;
   font-size: 16px;
 }
 
-.send {
+button {
   background: #e10600;
   color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 14px;
   font-weight: bold;
 }
 </style>
@@ -95,79 +72,126 @@ input {
 <header>MARVEL AI</header>
 
 <main>
-  <h1>Привет! Я — MARVEL AI.</h1>
-  <p class="subtitle">Твой личный ИИ-помощник. Что хочешь сделать сегодня?</p>
 
-  <div class="buttons">
-    <button onclick="quick('Помоги мне с учёбой')">📚 Учёба</button>
-    <button onclick="quick('Придумай идею')">💡 Идеи</button>
-    <button onclick="quick('Создай сайт')">💻 Создать сайт</button>
-    <button onclick="quick('Напиши код')">🧑‍💻 Код</button>
-  </div>
+<h2>🤖 Локальный ИИ</h2>
 
-  <div id="result">MARVEL AI готов к работе.</div>
+<div id="status">
+Загрузка нейросети...
+</div>
 
-  <div class="input">
-    <input id="message" placeholder="Напиши сообщение...">
-    <button class="send" onclick="send()">➤</button>
-  </div>
+<div id="chat">
+MARVEL AI запускается...
+</div>
+
+<div class="input">
+<input id="message" placeholder="Напиши сообщение...">
+<button onclick="send()">➤</button>
+</div>
+
 </main>
 
-<script>
-function quick(text) {
-  document.getElementById("message").value = text;
-  send();
+<script type="module">
+
+import { CreateMLCEngine }
+from "https://esm.run/@mlc-ai/web-llm";
+
+const model = "Llama-3.1-8B-Instruct-q4f32_1-MLC";
+
+let engine;
+
+async function startAI() {
+
+  const status = document.getElementById("status");
+
+  try {
+
+    status.textContent = "⏳ Загружаю модель...";
+
+    engine = await CreateMLCEngine(
+      model,
+      {
+        initProgressCallback: (progress) => {
+          status.textContent =
+            "⏳ Загрузка ИИ: " +
+            Math.round(progress.progress * 100) +
+            "%";
+        }
+      }
+    );
+
+    status.textContent =
+      "🟢 MARVEL AI готов!";
+
+    document.getElementById("chat").textContent =
+      "🤖 Привет! Я локальный ИИ MARVEL AI.\n\n" +
+      "Напиши мне сообщение.";
+
+  } catch (error) {
+
+    status.textContent =
+      "❌ Не удалось запустить ИИ.";
+
+    document.getElementById("chat").textContent =
+      "Ошибка: " + error.message;
+
+    console.error(error);
+  }
 }
 
-function send() {
+async function send() {
+
+  if (!engine) {
+    alert("Подожди, нейросеть ещё загружается.");
+    return;
+  }
+
   const input = document.getElementById("message");
-  const result = document.getElementById("result");
-  const text = input.value.trim().toLowerCase();
+  const chat = document.getElementById("chat");
+
+  const text = input.value.trim();
 
   if (!text) return;
 
-  if (text.includes("сайт") || text.includes("код")) {
-    result.textContent =
-      "💻 MARVEL AI\n\nВот пример сайта:\n\n" +
-      "<!DOCTYPE html>\\n" +
-      "<html>\\n" +
-      "<head><title>Мой сайт</title></head>\\n" +
-      "<body>\\n" +
-      "<h1>Привет!</h1>\\n" +
-      "<p>Это мой первый сайт.</p>\\n" +
-      "</body>\\n" +
-      "</html>";
-  }
+  chat.textContent = "🤖 Думаю...";
 
-  else if (
-    text.includes("учёб") ||
-    text.includes("учеб") ||
-    text.includes("математ")
-  ) {
-    result.textContent =
-      "📚 MARVEL AI\n\n" +
-      "Я могу помочь разобраться с заданием по шагам. " +
-      "Напиши само задание.";
-  }
+  try {
 
-  else if (
-    text.includes("иде")
-  ) {
-    result.textContent =
-      "💡 Идея:\n\n" +
-      "Сделай MARVEL AI приложением, которое умеет создавать сайты " +
-      "по обычному описанию пользователя.";
-  }
+    const response =
+      await engine.chat.completions.create({
 
-  else {
-    result.textContent =
-      "🤖 MARVEL AI\n\n" +
-      "Сейчас это бесплатная версия без подключения внешней нейросети.\n\n" +
-      "Но интерфейс уже готов, и следующим этапом можно подключить настоящую модель.";
+        messages: [
+          {
+            role: "system",
+            content:
+              "Ты MARVEL AI — дружелюбный ИИ-помощник. Отвечай на русском."
+          },
+          {
+            role: "user",
+            content: text
+          }
+        ],
+
+        temperature: 0.7,
+        max_tokens: 300
+      });
+
+    chat.textContent =
+      "🤖 MARVEL AI:\n\n" +
+      response.choices[0].message.content;
+
+  } catch (error) {
+
+    chat.textContent =
+      "❌ Ошибка: " + error.message;
   }
 
   input.value = "";
 }
+
+window.send = send;
+
+startAI();
+
 </script>
 
 </body>
