@@ -3,73 +3,374 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#e21b23">
 <title>MARVEL AI</title>
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#fff;color:#333}
-.app{min-height:100vh;background:linear-gradient(#fff 0%,#fff 65%,#ffdede 100%)}
-.top{height:80px;padding:38px 22px 10px;display:flex;justify-content:space-between}
-button{border:0;background:none}
-.icon{font-size:28px;color:#e21b23}
-.logo{margin:45px auto 0;width:max-content;background:#e21b23;color:white;border:4px solid #e21b23;padding:5px 12px;font-size:34px;font-weight:900;letter-spacing:-2px}
-.hero{text-align:center;padding:32px 20px 15px}
-.hero h1{color:#e21b23;font-size:36px;margin:0 0 10px}
-.hero p{font-size:18px;line-height:1.45;margin:0}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:20px}
-.card{height:94px;border:1px solid #f2bfc1;border-radius:18px;background:white;text-align:left;padding:13px;font-size:15px}
-.card span{font-size:28px;color:#e21b23;display:block;margin-bottom:5px}
-.art{height:360px;background:linear-gradient(145deg,#fff0f0,#e21b23 65%,#a40000);position:relative;overflow:hidden}
-.art:before{content:"";position:absolute;inset:-100px;background:repeating-linear-gradient(135deg,transparent 0 35px,#ffffff35 36px 40px);transform:rotate(0deg)}
-.bigA{position:absolute;left:50%;top:48%;transform:translate(-50%,-50%);font-size:210px;font-weight:900;color:white;text-shadow:0 0 20px #ff7777}
-.chat{position:absolute;bottom:25px;left:20px;right:20px;height:60px;background:white;border-radius:32px;display:flex;align-items:center;padding-left:20px;box-shadow:0 5px 20px #60000055}
-.chat input{border:0;outline:0;flex:1;font-size:16px}
-.send{width:48px;height:48px;background:#e21b23;color:white;border-radius:50%;font-size:22px;margin-right:6px}
-@media(max-width:430px){.app{width:100%}}
+
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:white;
+  color:#333;
+}
+
+.app{
+  min-height:100vh;
+  background:linear-gradient(#fff 0%,#fff 65%,#ffdede 100%);
+}
+
+.top{
+  height:80px;
+  padding:38px 22px 10px;
+  display:flex;
+  justify-content:space-between;
+}
+
+button{
+  border:0;
+  background:none;
+  cursor:pointer;
+}
+
+.icon{
+  font-size:28px;
+  color:#e21b23;
+}
+
+.logo{
+  margin:45px auto 0;
+  width:max-content;
+  background:#e21b23;
+  color:white;
+  border:4px solid #e21b23;
+  padding:5px 12px;
+  font-size:34px;
+  font-weight:900;
+  letter-spacing:-2px;
+}
+
+.hero{
+  text-align:center;
+  padding:32px 20px 15px;
+}
+
+.hero h1{
+  color:#e21b23;
+  font-size:36px;
+  margin:0 0 10px;
+}
+
+.hero p{
+  font-size:18px;
+  line-height:1.45;
+  margin:0;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  padding:20px;
+}
+
+.card{
+  height:94px;
+  border:1px solid #f2bfc1;
+  border-radius:18px;
+  background:white;
+  text-align:left;
+  padding:13px;
+  font-size:15px;
+  box-shadow:0 3px 10px #00000008;
+}
+
+.card span{
+  font-size:28px;
+  color:#e21b23;
+  display:block;
+  margin-bottom:5px;
+}
+
+.art{
+  min-height:390px;
+  background:linear-gradient(145deg,#fff0f0,#e21b23 65%,#a40000);
+  position:relative;
+  overflow:hidden;
+  padding-bottom:100px;
+}
+
+.art:before{
+  content:"";
+  position:absolute;
+  inset:-100px;
+  background:repeating-linear-gradient(
+    135deg,
+    transparent 0 35px,
+    #ffffff35 36px 40px
+  );
+}
+
+.bigA{
+  position:absolute;
+  left:50%;
+  top:38%;
+  transform:translate(-50%,-50%);
+  font-size:210px;
+  font-weight:900;
+  color:white;
+  text-shadow:0 0 20px #ff7777;
+}
+
+.chat{
+  position:absolute;
+  bottom:25px;
+  left:20px;
+  right:20px;
+  min-height:60px;
+  background:white;
+  border-radius:32px;
+  display:flex;
+  align-items:center;
+  padding-left:20px;
+  box-shadow:0 5px 20px #60000055;
+  z-index:2;
+}
+
+.chat input{
+  border:0;
+  outline:0;
+  flex:1;
+  font-size:16px;
+  min-width:0;
+}
+
+.send{
+  width:48px;
+  height:48px;
+  background:#e21b23;
+  color:white;
+  border-radius:50%;
+  font-size:22px;
+  margin-right:6px;
+}
+
+.result{
+  display:none;
+  position:relative;
+  z-index:3;
+  margin:20px;
+  padding:18px;
+  background:white;
+  border-radius:18px;
+  color:#222;
+  white-space:pre-wrap;
+  overflow:auto;
+  max-height:300px;
+}
+
+@media(max-width:430px){
+  .app{width:100%}
+}
 </style>
 </head>
+
 <body>
+
 <div class="app">
 
-<div class="top">
-<button class="icon">☰</button>
-<button class="icon">⚙︎</button>
-</div>
+  <div class="top">
+    <button class="icon">☰</button>
+    <button class="icon">⚙︎</button>
+  </div>
 
-<div class="logo">MARVEL AI</div>
+  <div class="logo">MARVEL AI</div>
 
-<div class="hero">
-<h1>Привет!</h1>
-<p>Я — MARVEL AI.<br>
-Твой личный ИИ-помощник.<br>
-Что хочешь сделать сегодня?</p>
-</div>
+  <div class="hero">
+    <h1>Привет!</h1>
+    <p>
+      Я — MARVEL AI.<br>
+      Твой личный ИИ-помощник.<br>
+      Что хочешь сделать сегодня?
+    </p>
+  </div>
 
-<div class="grid">
-<button class="card"><span>💬</span>Ответить<br>на вопросы</button>
-<button class="card"><span>🎓</span>Помочь<br>с учёбой</button>
-<button class="card"><span>&lt;/&gt;</span>Написать<br>и объяснить код</button>
-<button class="card"><span>💡</span>Придумать<br>идеи</button>
-<button class="card"><span>▧</span>Создать<br>изображения</button>
-<button class="card"><span>🎙</span>Голосовое<br>общение</button>
-</div>
+  <div class="grid">
 
-<div class="art">
-<div class="bigA">A</div>
-<div class="chat">
-<input id="message" placeholder="Напиши сообщение...">
-<button class="send" onclick="send()">➤</button>
-</div>
-</div>
+    <button class="card" onclick="quick('Ответь на мой вопрос')">
+      <span>💬</span>
+      Ответить<br>на вопросы
+    </button>
+
+    <button class="card" onclick="quick('Помоги мне с учёбой')">
+      <span>🎓</span>
+      Помочь<br>с учёбой
+    </button>
+
+    <button class="card" onclick="quick('Создай код сайта')">
+      <span>&lt;/&gt;</span>
+      Написать<br>и объяснить код
+    </button>
+
+    <button class="card" onclick="quick('Придумай мне идею')">
+      <span>💡</span>
+      Придумать<br>идеи
+    </button>
+
+    <button class="card" onclick="quick('Создай изображение')">
+      <span>▧</span>
+      Создать<br>изображения
+    </button>
+
+    <button class="card" onclick="quick('Давай поговорим')">
+      <span>🎙</span>
+      Голосовое<br>общение
+    </button>
+
+  </div>
+
+  <div class="art">
+
+    <div class="bigA">A</div>
+
+    <div id="result" class="result"></div>
+
+    <div class="chat">
+      <input
+        id="message"
+        placeholder="Напиши сообщение..."
+        onkeydown="if(event.key==='Enter') send()"
+      >
+
+      <button class="send" onclick="send()">➤</button>
+    </div>
+
+  </div>
 
 </div>
 
 <script>
+
+function quick(text){
+  document.getElementById("message").value=text;
+  document.getElementById("message").focus();
+}
+
 function send(){
-let text=document.getElementById("message").value;
-if(text.trim()){
-alert("MARVEL AI получил: "+text);
+
+  const input=document.getElementById("message");
+  const result=document.getElementById("result");
+
+  const text=input.value.trim();
+
+  if(!text){
+    return;
+  }
+
+  let answer="";
+
+  const lower=text.toLowerCase();
+
+  if(
+    lower.includes("создай код") ||
+    lower.includes("создай сайт") ||
+    lower.includes("сайт")
+  ){
+
+    answer=
+`MARVEL AI — генератор сайта
+
+Вот пример готового сайта:
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Мой сайт</title>
+<style>
+body{
+  font-family:Arial;
+  text-align:center;
+  padding:50px;
 }
+h1{
+  color:#e21b23;
 }
-</script>
+button{
+  padding:12px 20px;
+  border:0;
+  border-radius:10px;
+  background:#e21b23;
+  color:white;
+}
+</style>
+</head>
+<body>
+
+<h1>Мой новый сайт</h1>
+<p>Сайт создан с помощью MARVEL AI 🚀</p>
+<button onclick="alert('Привет!')">
+Нажми меня
+</button>
+
 </body>
-  </html>
+</html>`;
+
+  }else if(
+    lower.includes("учёб") ||
+    lower.includes("учеб") ||
+    lower.includes("математ")
+  ){
+
+    answer=
+`🎓 MARVEL AI
+
+Я помогу разобраться с заданием.
+
+Напиши само задание, и мы разберём его по шагам.`;
+
+  }else if(
+    lower.includes("иде") ||
+    lower.includes("придум")
+  ){
+
+    answer=
+`💡 Вот идея:
+
+Создай персональный сайт-портфолио,
+где будут твои проекты, навыки и
+кнопка связи.
+
+MARVEL AI может помочь написать
+для него HTML, CSS и JavaScript.`;
+
+  }else{
+
+    answer=
+`🤖 MARVEL AI получил:
+
+"${text}"
+
+Сейчас это бесплатная демо-версия.
+Настоящую нейросеть подключим отдельным
+безопасным сервером, чтобы не раскрывать
+API-ключ прямо в приложении.`;
+
+  }
+
+  result.textContent=answer;
+  result.style.display="block";
+
+  input.value="";
+
+  result.scrollIntoView({
+    behavior:"smooth",
+    block:"center"
+  });
+}
+
+</script>
+
+</body>
+</html>
