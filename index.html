@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MARVEL AI — Local AI</title>
+<title>MARVEL AI</title>
 
 <style>
 body {
@@ -27,7 +27,7 @@ main {
   padding: 20px;
 }
 
-#status {
+#status, #chat {
   background: #222;
   padding: 15px;
   border-radius: 12px;
@@ -35,9 +35,6 @@ main {
 }
 
 #chat {
-  background: #1d1d1d;
-  padding: 15px;
-  border-radius: 12px;
   min-height: 180px;
   white-space: pre-wrap;
 }
@@ -45,7 +42,6 @@ main {
 .input {
   display: flex;
   gap: 8px;
-  margin-top: 15px;
 }
 
 input {
@@ -73,15 +69,11 @@ button {
 
 <main>
 
-<h2>🤖 Локальный ИИ</h2>
+<h2>🤖 MARVEL AI</h2>
 
-<div id="status">
-Загрузка нейросети...
-</div>
+<div id="status">Проверяю поддержку локального ИИ...</div>
 
-<div id="chat">
-MARVEL AI запускается...
-</div>
+<div id="chat">Запуск...</div>
 
 <div class="input">
 <input id="message" placeholder="Напиши сообщение...">
@@ -92,87 +84,112 @@ MARVEL AI запускается...
 
 <script type="module">
 
-import { CreateMLCEngine }
-from "https://esm.run/@mlc-ai/web-llm";
+const status = document.getElementById("status");
+const chat = document.getElementById("chat");
 
-const model = "Llama-3.1-8B-Instruct-q4f32_1-MLC";
+try {
 
-let engine;
-
-async function startAI() {
-
-  const status = document.getElementById("status");
-
-  try {
-
-    status.textContent = "⏳ Загружаю модель...";
-
-    engine = await CreateMLCEngine(
-      model,
-      {
-        initProgressCallback: (progress) => {
-          status.textContent =
-            "⏳ Загрузка ИИ: " +
-            Math.round(progress.progress * 100) +
-            "%";
-        }
-      }
+  if (!("gpu" in navigator)) {
+    throw new Error(
+      "WebGPU не поддерживается этим браузером или устройством."
     );
-
-    status.textContent =
-      "🟢 MARVEL AI готов!";
-
-    document.getElementById("chat").textContent =
-      "🤖 Привет! Я локальный ИИ MARVEL AI.\n\n" +
-      "Напиши мне сообщение.";
-
-  } catch (error) {
-
-    status.textContent =
-      "❌ Не удалось запустить ИИ.";
-
-    document.getElementById("chat").textContent =
-      "Ошибка: " + error.message;
-
-    console.error(error);
   }
+
+  status.textContent =
+    "🟢 WebGPU найден. Загружаю WebLLM...";
+
+  const { CreateMLCEngine } =
+    await import("https://esm.run/@mlc-ai/web-llm");
+
+  const model =
+    "Llama-3.1-8B-Instruct-q4f32_1-MLC";
+
+  status.textContent =
+    "⏳ Загружаю модель ИИ...";
+
+  window.engine = await CreateMLCEngine(
+    model,
+    {
+      initProgressCallback: (progress) => {
+
+        status.textContent =
+          "⏳ Загрузка ИИ: " +
+          Math.round(progress.progress * 100) +
+          "%";
+
+      }
+    }
+  );
+
+  status.textContent =
+    "🟢 MARVEL AI готов!";
+
+  chat.textContent =
+    "🤖 Привет! Я MARVEL AI.\n\n" +
+    "Локальный ИИ успешно запустился!";
+
+} catch (error) {
+
+  status.textContent =
+    "❌ ИИ не запустился";
+
+  chat.textContent =
+    "Причина ошибки:\n\n" +
+    error.message +
+    "\n\nКод ошибки:\n" +
+    error.name;
+
+  console.error(error);
+
 }
 
-async function send() {
 
-  if (!engine) {
-    alert("Подожди, нейросеть ещё загружается.");
+window.send = async function() {
+
+  if (!window.engine) {
+
+    chat.textContent =
+      "❌ Нейросеть ещё не запустилась.";
+
     return;
+
   }
 
-  const input = document.getElementById("message");
-  const chat = document.getElementById("chat");
+  const input =
+    document.getElementById("message");
 
-  const text = input.value.trim();
+  const text =
+    input.value.trim();
 
   if (!text) return;
 
-  chat.textContent = "🤖 Думаю...";
+  chat.textContent =
+    "🤖 Думаю...";
 
   try {
 
     const response =
-      await engine.chat.completions.create({
+      await window.engine.chat.completions.create({
 
         messages: [
+
           {
             role: "system",
             content:
-              "Ты MARVEL AI — дружелюбный ИИ-помощник. Отвечай на русском."
+              "Ты MARVEL AI. Отвечай на русском языке."
           },
+
           {
             role: "user",
             content: text
           }
+
         ],
 
         temperature: 0.7,
+
         max_tokens: 300
+
       });
 
     chat.textContent =
@@ -182,15 +199,14 @@ async function send() {
   } catch (error) {
 
     chat.textContent =
-      "❌ Ошибка: " + error.message;
+      "❌ Ошибка ответа:\n\n" +
+      error.message;
+
   }
 
   input.value = "";
-}
 
-window.send = send;
-
-startAI();
+};
 
 </script>
 
